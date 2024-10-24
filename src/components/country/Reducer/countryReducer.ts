@@ -22,10 +22,12 @@ export interface CountryAction {
     | "CHANGE_LANGUAGE";
   payload?:
     | {
-        index: number | string;
+        index?: number | string;
         countries?: CountryData[];
         switchLang?: string;
-        typeOfLanguage: string;
+        typeOfLanguage?: string;
+        newCountryEng?: CountryData | undefined;
+        newCountryGeo?: CountryData | undefined;
       }
     | CountryData;
 }
@@ -74,16 +76,32 @@ export const countryReducer = (
       };
 
       case 'ADD_COUNTRY':
-        const newCountry = action.payload as CountryData;
-        countryCharacteristics.en.unshift(newCountry); 
-        countryCharacteristics.ge.unshift(newCountry); 
-  
+      //@ts-ignore
+      const { newCountryEng, newCountryGeo } = action.payload;
 
+      if (newCountryEng) {
+        countryCharacteristics.en.unshift(newCountryEng);
+      }
+      if (newCountryGeo) {
+        countryCharacteristics.ge.unshift(newCountryGeo);
+      }
+
+      if (state.switchLang === 'en' && newCountryEng) {
         return {
           ...state,
-          //@ts-ignore
-          countries: [...countryCharacteristics[state.switchLang]],
+          countries: [...countryCharacteristics.en],
         };
+      } else if (state.switchLang === 'ge' && newCountryGeo) {
+        return {
+          ...state,
+          countries: [...countryCharacteristics.ge],
+        };
+      } 
+      
+      return {
+        ...state,
+      };
+        
     case "DELETE_COUNTRY":
       if (
         typeof action.payload?.index === "number" &&

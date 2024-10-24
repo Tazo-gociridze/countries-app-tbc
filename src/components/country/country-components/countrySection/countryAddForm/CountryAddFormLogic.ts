@@ -78,20 +78,17 @@ export const useCountryAddFormLogic = (
     };
   
     if (
-      newCountryNameEng.length !== 0 && 
-      newCountryCapitalEng.length !== 0 && 
-      newCountryPopulationEng.length !== 0 
+      newCountryNameEng.length !== 0 &&
+      newCountryCapitalEng.length !== 0 &&
+      newCountryPopulationEng.length !== 0 &&
+      newCountryNameGeo.length !== 0 &&
+      newCountryCapitalGeo.length !== 0 &&
+      newCountryPopulationGeo.length !== 0
     ) {
-      dispatch({ type: 'ADD_COUNTRY', payload: newCountryEng }); 
-    }
-
-    if (
-      newCountryNameGeo.length !== 0 && 
-      newCountryCapitalGeo.length !== 0 && 
-      newCountryPopulationGeo.length !== 0 
-    ) {
-
-      dispatch({ type: 'ADD_COUNTRY', payload: newCountryGeo }); 
+      dispatch({ 
+        type: 'ADD_COUNTRY', 
+        payload: { newCountryEng, newCountryGeo } 
+      });
     }
 
     setNewCountryNameEng("");
