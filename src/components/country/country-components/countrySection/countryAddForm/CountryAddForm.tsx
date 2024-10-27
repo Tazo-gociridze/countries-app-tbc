@@ -1,9 +1,8 @@
-import { FC } from "react";
+import React, { useState } from "react";
 import { DispatchType, useCountryAddFormLogic } from "./CountryAddFormLogic";
 
-
-
-const CountryAddForm: FC<DispatchType> = ({ dispatch, typeOfLanguage }) => {
+const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
+  const [inputLanguage, setInputLanguage] = useState("english");
 
   const {
     switchLang,
@@ -25,51 +24,75 @@ const CountryAddForm: FC<DispatchType> = ({ dispatch, typeOfLanguage }) => {
     countryNameTargetHandlerGeo,
     countryCapitalTargetHandlerGeo,
     countryPopulationTargetHandlerGeo,
-  } = useCountryAddFormLogic(
-    {dispatch, typeOfLanguage}
-  );
+  } = useCountryAddFormLogic({ dispatch, inputLanguage });
 
   return (
     <form className="create-country-form" onSubmit={handleAddCountry} action="">
-      {nameError && <p>max limit of symbols - 8</p>}
-      <input
-        type="text"
-        value={newCountryNameGeo}
-        onChange={countryNameTargetHandlerGeo}
-        placeholder={"ქვეყნის სახელი"}
-      />
-      <input
-        type="text"
-        value={newCountryNameEng}
-        onChange={countryNameTargetHandlerEng}
-        placeholder={"Country name"}
-      />
-      {capitalError && <p>min limit of symbols - 8</p>}
-      <input
-        type="text"
-        value={newCountryCapitalGeo}
-        onChange={countryCapitalTargetHandlerGeo}
-        placeholder={"დედაქალაქი"}
-      />
-      <input
-        type="text"
-        value={newCountryCapitalEng}
-        onChange={countryCapitalTargetHandlerEng}
-        placeholder={"Capital"}
-      />
-      {populationError && <p>max limit of symbols - 8</p>}
-      <input
-        type="number"
-        value={newCountryPopulationGeo}
-        onChange={countryPopulationTargetHandlerGeo}
-        placeholder={"მოსახლეობა"}
-      />
-      <input
-        type="number"
-        value={newCountryPopulationEng}
-        onChange={countryPopulationTargetHandlerEng}
-        placeholder={"population"}
-      />
+      <div className="form-lang-navigation">
+        <span
+          className={inputLanguage === "english" ? `lang-active` : ``}
+          onClick={() => setInputLanguage("english")}
+        >
+          English
+        </span>
+        <span
+          className={inputLanguage === "georgian" ? `lang-active` : ``}
+          onClick={() => setInputLanguage("georgian")}
+        >
+          ქართული
+        </span>
+      </div>
+
+      {inputLanguage === "english" ? (
+        <>
+          <input
+            type="text"
+            value={newCountryNameEng}
+            onChange={countryNameTargetHandlerEng}
+            placeholder={"Country name"}
+          />
+
+          <input
+            type="text"
+            value={newCountryCapitalEng}
+            onChange={countryCapitalTargetHandlerEng}
+            placeholder={"Capital"}
+          />
+
+          <input
+            type="number"
+            value={newCountryPopulationEng}
+            onChange={countryPopulationTargetHandlerEng}
+            placeholder={"population"}
+          />
+        </>
+      ) : (
+        <>
+          {nameError && <p>max limit of symbols - 8</p>}
+          <input
+            type="text"
+            value={newCountryNameGeo}
+            onChange={countryNameTargetHandlerGeo}
+            placeholder={"ქვეყნის სახელი"}
+          />
+          {capitalError && <p>min limit of symbols - 8</p>}
+          <input
+            type="text"
+            value={newCountryCapitalGeo}
+            onChange={countryCapitalTargetHandlerGeo}
+            placeholder={"დედაქალაქი"}
+          />
+
+          {populationError && <p>max limit of symbols - 8</p>}
+          <input
+            type="number"
+            value={newCountryPopulationGeo}
+            onChange={countryPopulationTargetHandlerGeo}
+            placeholder={"მოსახლეობა"}
+          />
+        </>
+      )}
+
       <input type="file" accept="image/" onChange={handleFlagChange} />
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       <button>

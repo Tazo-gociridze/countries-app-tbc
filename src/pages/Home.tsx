@@ -1,16 +1,11 @@
 import Hero from "@components/Home/Hero";
 import "../App.css";
 
-
-
-
 function Home() {
   return (
-    <>
     <main>
-         <Hero />
+      <Hero />
     </main>
-    </>
   );
 }
 

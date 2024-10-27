@@ -4,7 +4,7 @@ import Input from "./form-components/Input";
 import { LanguageContext } from "../../../../App";
 
 function Form() {
-  const { switchLang } = useContext(LanguageContext); 
+  const { switchLang } = useContext(LanguageContext);
   const [name, setName] = useState<NameState>({
     firstName: "",
     lastName: "",
@@ -19,7 +19,9 @@ function Form() {
     message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
 
     if (value.length > 8) {
@@ -56,7 +58,7 @@ function Form() {
       <div className="form__wrapper">
         {errors.firstName && <div className="error">{errors.firstName}</div>}
         <Input
-          placeholder={switchLang === 'en' ? "First-name" : 'სახელი'}
+          placeholder={switchLang === "en" ? "First-name" : "სახელი"}
           type="text"
           name="firstName"
           value={name.firstName}
@@ -65,7 +67,7 @@ function Form() {
 
         {errors.lastName && <div className="error">{errors.lastName}</div>}
         <Input
-          placeholder={switchLang === 'en' ? "Last-name" : 'გვარი'}
+          placeholder={switchLang === "en" ? "Last-name" : "გვარი"}
           type="text"
           name="lastName"
           value={name.lastName}
@@ -74,7 +76,7 @@ function Form() {
 
         {errors.email && <div className="error">{errors.email}</div>}
         <Input
-          placeholder={switchLang === 'en' ? "E-mail" : 'ელ-ფოსტა'}
+          placeholder={switchLang === "en" ? "E-mail" : "ელ-ფოსტა"}
           type="email"
           name="email"
           value={name.email}
@@ -83,13 +85,15 @@ function Form() {
 
         {errors.message && <div className="error">{errors.message}</div>}
         <textarea
-          placeholder={switchLang === 'en' ? "Message" : 'წერილი'}
+          placeholder={switchLang === "en" ? "Message" : "წერილი"}
           name="message"
           value={name.message}
           onChange={handleChange}
         />
 
-        <button type="submit">{switchLang === 'en' ? 'Send' : 'გაგზავნა'}</button>
+        <button type="submit">
+          {switchLang === "en" ? "Send" : "გაგზავნა"}
+        </button>
       </div>
     </form>
   );

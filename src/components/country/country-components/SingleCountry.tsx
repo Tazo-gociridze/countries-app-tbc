@@ -2,16 +2,16 @@ import { useParams } from "react-router-dom";
 import { CountryData } from "../static/Interfaces";
 import { CountryState } from "../Reducer/countryReducer";
 
-
-const SingleCountry = ({ countriesState }: { countriesState: CountryState }) => {
-  const { id } = useParams(); 
+const SingleCountry = ({
+  countriesState,
+}: {
+  countriesState: CountryState;
+}) => {
+  const { id } = useParams();
 
   const countryInfo: CountryData | undefined = countriesState.countries.find(
-    (country) => country.id.toString() === id
+    (country) => country.id.toString() === id,
   );
-
-
-  console.log(countryInfo)
 
   if (!countryInfo) {
     return <p>Page in not found</p>;

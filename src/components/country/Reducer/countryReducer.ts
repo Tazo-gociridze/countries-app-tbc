@@ -6,7 +6,7 @@ export interface ChangeLanguagePayload {
 }
 
 export interface CountryState {
-  switchLang: string; 
+  switchLang: string;
   countries: CountryData[];
 }
 
@@ -34,7 +34,7 @@ export interface CountryAction {
 
 export const countryReducer = (
   state: CountryState,
-  action: CountryAction
+  action: CountryAction,
 ): CountryState => {
   switch (action.type) {
     case "SORT_UP":
@@ -71,12 +71,14 @@ export const countryReducer = (
         countries: state.countries.map((country, index) =>
           index === action.payload?.index
             ? { ...country, likes: country.likes + 1 }
-            : country
+            : country,
         ),
       };
 
-      case 'ADD_COUNTRY':
+    case "ADD_COUNTRY":
+      // eslint-disable-next-line
       //@ts-ignore
+      // eslint-disable-next-line
       const { newCountryEng, newCountryGeo } = action.payload;
 
       if (newCountryEng) {
@@ -86,22 +88,22 @@ export const countryReducer = (
         countryCharacteristics.ge.unshift(newCountryGeo);
       }
 
-      if (state.switchLang === 'en' && newCountryEng) {
+      if (state.switchLang === "en" && newCountryEng) {
         return {
           ...state,
           countries: [...countryCharacteristics.en],
         };
-      } else if (state.switchLang === 'ge' && newCountryGeo) {
+      } else if (state.switchLang === "ge" && newCountryGeo) {
         return {
           ...state,
           countries: [...countryCharacteristics.ge],
         };
-      } 
-      
+      }
+
       return {
         ...state,
       };
-        
+
     case "DELETE_COUNTRY":
       if (
         typeof action.payload?.index === "number" &&
@@ -144,14 +146,15 @@ export const countryReducer = (
         return state;
       }
 
-      case "CHANGE_LANGUAGE":
-        return {
-          ...state, 
-          switchLang: (action.payload as ChangeLanguagePayload).switchLang,
-          countries: (action.payload as ChangeLanguagePayload).switchLang === 'en' 
+    case "CHANGE_LANGUAGE":
+      return {
+        ...state,
+        switchLang: (action.payload as ChangeLanguagePayload).switchLang,
+        countries:
+          (action.payload as ChangeLanguagePayload).switchLang === "en"
             ? [...countryCharacteristics.en]
             : [...countryCharacteristics.ge],
-        };
+      };
     default:
       return state;
   }

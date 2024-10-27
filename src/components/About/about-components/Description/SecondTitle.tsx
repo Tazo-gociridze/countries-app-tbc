@@ -1,15 +1,19 @@
-import { FC, useContext } from "react";
+import React, { useContext } from "react";
 import { LanguageContext } from "../../../../App";
 
-const SecondTitle: FC = () => {
-  const { switchLang } = useContext(LanguageContext); 
+const SecondTitle: React.FC = () => {
+  const { switchLang } = useContext(LanguageContext);
   return (
     <h2>
-      {
-      switchLang === 'en' 
-      ? <div>WE ARE <span>CREATIVE</span></div> 
-      : <div>ჩვენ ვართ <span>კრეატიულები</span></div>
-      }   
+      {switchLang === "en" ? (
+        <div>
+          WE ARE <span>CREATIVE</span>
+        </div>
+      ) : (
+        <div>
+          ჩვენ ვართ <span>კრეატიულები</span>
+        </div>
+      )}
     </h2>
   );
 };

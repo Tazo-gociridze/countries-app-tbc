@@ -10,15 +10,17 @@ export interface DispatchType {
 
 type Dispatch<A extends CountryAction> = (action: A) => void;
 
-export const useCountryAddFormLogic = (
-  {dispatch}: {
+export const useCountryAddFormLogic = ({
+  dispatch,
+  inputLanguage,
+}: {
   dispatch: Dispatch<CountryAction>;
-  typeOfLanguage: string;}
-  ) => {
+  inputLanguage: string;
+}) => {
   const { switchLang } = useContext(LanguageContext);
 
   const [newCountryFlagFile, setNewCountryFlagFile] = useState<File | null>(
-    null
+    null,
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -53,12 +55,12 @@ export const useCountryAddFormLogic = (
 
   const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     let flagPath = "";
     if (newCountryFlagFile) {
       flagPath = URL.createObjectURL(newCountryFlagFile);
     }
-  
+
     const newCountryEng: CountryData = {
       id: String(Math.random()),
       flagUrl: flagPath,
@@ -67,7 +69,7 @@ export const useCountryAddFormLogic = (
       population: newCountryPopulationEng || "0",
       likes: 0,
     };
-  
+
     const newCountryGeo: CountryData = {
       id: String(Math.random()),
       flagUrl: flagPath,
@@ -76,19 +78,29 @@ export const useCountryAddFormLogic = (
       population: newCountryPopulationGeo || "0",
       likes: 0,
     };
-  
-    if (
-      newCountryNameEng.length !== 0 &&
-      newCountryCapitalEng.length !== 0 &&
-      newCountryPopulationEng.length !== 0 &&
-      newCountryNameGeo.length !== 0 &&
-      newCountryCapitalGeo.length !== 0 &&
-      newCountryPopulationGeo.length !== 0
-    ) {
-      dispatch({ 
-        type: 'ADD_COUNTRY', 
-        payload: { newCountryEng, newCountryGeo } 
-      });
+
+    if (inputLanguage === "english") {
+      if (
+        newCountryNameEng.length !== 0 &&
+        newCountryCapitalEng.length !== 0 &&
+        newCountryPopulationEng.length !== 0
+      ) {
+        dispatch({
+          type: "ADD_COUNTRY",
+          payload: { newCountryEng },
+        });
+      }
+    } else if (inputLanguage === "georgian") {
+      if (
+        newCountryNameGeo.length !== 0 &&
+        newCountryCapitalGeo.length !== 0 &&
+        newCountryPopulationGeo.length !== 0
+      ) {
+        dispatch({
+          type: "ADD_COUNTRY",
+          payload: { newCountryGeo },
+        });
+      }
     }
 
     setNewCountryNameEng("");
@@ -104,42 +116,48 @@ export const useCountryAddFormLogic = (
     setErrorMessage(null);
   };
 
-  
-
-  const countryNameTargetHandlerEng = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const countryNameTargetHandlerEng = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setNewCountryNameEng(e.target.value);
     setNameError(e.target.value.length > 12 ? "the most length name" : "");
   };
-  const countryNameTargetHandlerGeo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const countryNameTargetHandlerGeo = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setNewCountryNameGeo(e.target.value);
     setNameError(e.target.value.length > 12 ? "the most length name" : "");
   };
 
   const countryCapitalTargetHandlerEng = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewCountryCapitalEng(e.target.value);
     setCapitalError(e.target.value.length > 12 ? "the most length name" : "");
   };
   const countryCapitalTargetHandlerGeo = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewCountryCapitalGeo(e.target.value);
     setCapitalError(e.target.value.length > 12 ? "the most length name" : "");
   };
 
   const countryPopulationTargetHandlerEng = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewCountryPopulationEng(e.target.value);
-    setPopulationError(e.target.value.length > 12 ? "the most length name" : "");
+    setPopulationError(
+      e.target.value.length > 12 ? "the most length name" : "",
+    );
   };
 
   const countryPopulationTargetHandlerGeo = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setNewCountryPopulationGeo(e.target.value);
-    setPopulationError(e.target.value.length > 12 ? "the most length name" : "");
+    setPopulationError(
+      e.target.value.length > 12 ? "the most length name" : "",
+    );
   };
 
   return {

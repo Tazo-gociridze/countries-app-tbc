@@ -6,14 +6,15 @@ import About from "./pages/About";
 import Country from "./pages/Country";
 import Contact from "./pages/Contact";
 import SingleCountry from "@components/country/country-components/SingleCountry";
-import { FC, useState, createContext, useReducer } from "react";
+import React, { FC, useState, createContext, useReducer } from "react";
 import { CountryState, countryReducer } from "@components/country/Reducer/countryReducer";
 import { countryCharacteristics } from "@components/country/Reducer/state";
 
 export const LanguageContext = createContext({ 
   switchLang: 'en', 
   setSwitchLang: undefined as unknown as (newLang: string) => void,
-  dispatch: undefined as unknown as React.Dispatch<any>,
+  // eslint-disable-next-line
+  dispatch: undefined as unknown as React.Dispatch<any>, 
 }); 
 
 const App: FC = () => {
@@ -23,13 +24,12 @@ const App: FC = () => {
     countries: [...countryCharacteristics.en] 
   } as CountryState); 
 
-  console.log(state)
   return (
     <BrowserRouter>
       <LanguageContext.Provider  value={{switchLang, setSwitchLang, dispatch}}> 
         <Routes> 
           <Route path="/" element={<Layout />}>
-            <Route path="/:lang/home" index element={<Home/>}></Route>
+            <Route path="/:lang" element={<Home/>}></Route>
             <Route path="/:lang/about" element={<About/>}></Route>
             <Route path="/:lang/country" element={<Country countriesState={state} switchLangDispatch={dispatch}/>}></Route>
             <Route path="/:lang/country/:id" element={<SingleCountry countriesState={state}/>}></Route>
@@ -40,5 +40,6 @@ const App: FC = () => {
     </BrowserRouter>
   );
 };
+
 
 export default App;

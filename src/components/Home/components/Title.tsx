@@ -1,7 +1,7 @@
-import { FC, useContext } from "react";
+import { useContext } from "react";
 import { LanguageContext } from "../../../App";
 
-const Title: FC = () => {
+const Title: React.FC = () => {
   const { switchLang } = useContext(LanguageContext);
   return (
     <>

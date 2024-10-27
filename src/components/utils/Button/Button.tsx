@@ -1,9 +1,7 @@
-import React, { FC } from "react"
+import React, { FC } from "react";
 
-const Button: FC<React.PropsWithChildren> = ({children}) => {
-  return (
-    <button>{children}</button>
-  )
+const Button: FC<React.PropsWithChildren> = ({ children }) => {
+  return <button>{children}</button>;
 };
 
 export default Button;
