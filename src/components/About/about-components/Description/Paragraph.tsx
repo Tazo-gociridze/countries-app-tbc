@@ -4,7 +4,7 @@ import { LanguageContext } from "../../../../App";
 const Paragraph: React.FC = () => {
   const { switchLang } = useContext(LanguageContext);
   return (
-    <>
+    <div>
       {switchLang === "en" ? (
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, ea rem?
@@ -23,7 +23,6 @@ const Paragraph: React.FC = () => {
           თავად კომპანია ძალიან წარმატებული კომპანიაა. ამას აქვს მნიშვნელობა? არ
           განვმარტავ მოგერიებას, რომელი სიამოვნებით არ იციან მათი ბრალის
           უბედურება? ყველაზე ღირსეულს სიამოვნებით აგიხსნი, როცა იკითხავს,
-          ​​განსხვავებას რაღაც სიძულვილით? თავად მომხმარებელი, მომხმარებელს
           შეეძლება განახორციელოს კომპანიის adipiscing. ისინი არ არიან ფხვიერი.
           მასზე ნაკლებად ვიყოთ, არქიტექტორი, ამას კორუფციული ტკივილები
           გვაბრალებენ და ეს მართალია.
@@ -34,7 +33,7 @@ const Paragraph: React.FC = () => {
           როდის, ბრალია?
         </p>
       )}
-    </>
+    </div>
   );
 };
 

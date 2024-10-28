@@ -7,7 +7,8 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     navigate("/en");
-  }, []);
+  // eslint-disable-next-line
+  },[]);
 
   return (
     <div className="layout">

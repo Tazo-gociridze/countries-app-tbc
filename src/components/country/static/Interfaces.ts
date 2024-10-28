@@ -3,10 +3,10 @@ export interface CountryData {
   capital: string;
   population: string;
   flagUrl: string;
-  id: string | number | any;
+  id: string | number | bigint;
   likes: number;
   isDeleted?: boolean;
-  countries?: any;
+  countries?: CountryData[];
   index?: number;
   language?: string;
 }
