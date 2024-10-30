@@ -9,12 +9,14 @@ const Nav: FC<{ switchLang: string }> = ({ switchLang }) => {
           { name: "About", path: "/en/about" },
           { name: "Country", path: "/en/country" },
           { name: "Contact", path: "/en/contact" },
+          { name: "OtpInput", path: "/en/otpinput" },
         ]
       : [
           { name: "მთავარი", path: "/ge" },
           { name: "ჩვენს შესახებ", path: "/ge/about" },
           { name: "ქვეყანა", path: "/ge/country" },
           { name: "კონტაქტი", path: "/ge/contact" },
+          { name: "ოტპ ინფუთი", path: "/ge/otpinput" },
         ];
 
   const location = useLocation();

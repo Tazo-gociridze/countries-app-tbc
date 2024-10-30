@@ -12,6 +12,7 @@ import {
   countryReducer,
 } from "@components/country/Reducer/countryReducer";
 import { countryCharacteristics } from "@components/country/Reducer/state";
+import OtpInput from "./pages/OtpInput";
 
 export const LanguageContext = createContext({
   switchLang: "en",
@@ -45,6 +46,7 @@ const App: FC = () => {
               element={<SingleCountry countriesState={state} />}
             ></Route>
             <Route path="/:lang/contact" element={<Contact />}></Route>
+            <Route path="/:lang/otpinput" element={<OtpInput />}></Route>
           </Route>
         </Routes>
       </LanguageContext.Provider>

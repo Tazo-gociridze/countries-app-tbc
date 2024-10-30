@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const Layout: React.FC = () => {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     navigate("/en");
     // eslint-disable-next-line

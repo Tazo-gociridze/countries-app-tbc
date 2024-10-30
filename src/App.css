@@ -336,6 +336,15 @@
   opacity: 0.5;
 }
 
+.single-country__wrapper{
+  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
 /* Contact page ------>>> */
 
 .contact-page {
@@ -366,6 +375,56 @@
 
   button {
     height: 40px;
+  }
+}
+
+/* OTPINPUT ------------------------------> */
+
+.otpinput-wrapper {
+  display: flex;
+  gap: 30px;
+  margin-top: 150px;
+  justify-content: center;
+
+  .otpinput-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+  }
+  
+  .otp-input {
+    width: 70px;
+    height: 70px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    text-align: center;
+    font-size: 30px;
+    margin-right: 8px;
+    font-family: sans-serif;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .otp-input:focus {
+    border-color: #FFA500; 
+    box-shadow: 0 0 10px #ac7206; 
+  }
+  
+  .otp-input:focus::placeholder {
+    color: #FFA500; 
+  }
+  
+  .otp-input:not(:placeholder-shown) {
+    color: #FFA500;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 }
 

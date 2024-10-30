@@ -18,7 +18,7 @@ const SingleCountry = ({
   }
 
   return (
-    <div>
+    <div className="single-country__wrapper">
       <span>{countryInfo.name}</span>
       <br />
       <span>{countryInfo.capital}</span>
