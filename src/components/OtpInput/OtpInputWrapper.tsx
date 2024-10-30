@@ -1,14 +1,18 @@
 import { FC, useEffect } from "react";
 import OtpInputWrapperLogic from "./OtpInputWrapperLogic";
 
-const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({inputsQuantity}) => {
+const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({
+  inputsQuantity,
+}) => {
   useEffect(() => {
     if (otpValues.every((value) => value === "")) {
       inputRefs.current[0]?.focus();
     }
   });
-  
-  const { handleInputChange, otpValues, inputRefs, } = OtpInputWrapperLogic({inputsQuantity})
+
+  const { handleInputChange, otpValues, inputRefs } = OtpInputWrapperLogic({
+    inputsQuantity,
+  });
 
   return (
     <div className="otpinput-wrapper">

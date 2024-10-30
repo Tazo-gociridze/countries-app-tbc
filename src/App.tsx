@@ -7,30 +7,32 @@ import Country from "./pages/Country";
 import Contact from "./pages/Contact";
 import SingleCountry from "@components/country/country-components/SingleCountry";
 import React, { FC, useState, createContext, useReducer } from "react";
-import {
-  CountryState,
-  countryReducer,
-} from "@components/country/Reducer/countryReducer";
+import { CountryState,countryReducer, } from "@components/country/Reducer/countryReducer";
 import { countryCharacteristics } from "@components/country/Reducer/state";
 import OtpInput from "./pages/OtpInput";
+import { LanguageAction, initialState, languageReducer } from "./AppInterfaces";
 
-export const LanguageContext = createContext({
-  switchLang: "en",
-  setSwitchLang: undefined as unknown as (newLang: string) => void,
-  // eslint-disable-next-line
-  dispatch: undefined as unknown as React.Dispatch<any>,
+export const LanguageContext = createContext<{
+  switchLang: string;
+  setSwitchLang: (newLang: string) => void;
+  dispatch: React.Dispatch<LanguageAction>;
+}>({
+  switchLang: 'en',
+  setSwitchLang: undefined as unknown as (newLang: string) => void, 
+  dispatch: undefined as unknown as React.Dispatch<LanguageAction>, 
 });
 
 const App: FC = () => {
   const [switchLang, setSwitchLang] = useState("en");
-  const [state, dispatch] = useReducer(countryReducer, {
+  const [state, dispatch] = useReducer(languageReducer, initialState);
+  const [countriesState, countryDispatch] = useReducer(countryReducer, {
     switchLang: switchLang,
     countries: [...countryCharacteristics.en],
   } as CountryState);
 
   return (
     <BrowserRouter>
-      <LanguageContext.Provider value={{ switchLang, setSwitchLang, dispatch }}>
+      <LanguageContext.Provider value={{ switchLang: state.switchLang, setSwitchLang, dispatch }}>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/:lang" element={<Home />}></Route>
@@ -38,12 +40,12 @@ const App: FC = () => {
             <Route
               path="/:lang/country"
               element={
-                <Country countriesState={state} switchLangDispatch={dispatch} />
+                <Country countriesState={countriesState} switchLangDispatch={countryDispatch} />
               }
             ></Route>
             <Route
               path="/:lang/country/:id"
-              element={<SingleCountry countriesState={state} />}
+              element={<SingleCountry countriesState={countriesState} />}
             ></Route>
             <Route path="/:lang/contact" element={<Contact />}></Route>
             <Route path="/:lang/otpinput" element={<OtpInput />}></Route>
