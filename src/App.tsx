@@ -7,7 +7,11 @@ import Country from "./pages/Country";
 import Contact from "./pages/Contact";
 import SingleCountry from "@components/country/country-components/SingleCountry";
 import React, { FC, useState, createContext, useReducer } from "react";
-import { CountryAction, CountryState, countryReducer, } from "@components/country/Reducer/countryReducer";
+import {
+  CountryAction,
+  CountryState,
+  countryReducer,
+} from "@components/country/Reducer/countryReducer";
 import { countryCharacteristics } from "@components/country/Reducer/state";
 import OtpInput from "./pages/OtpInput";
 
