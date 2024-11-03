@@ -1,15 +1,8 @@
 import Header from "@components/Header/Header";
-import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 const Layout: React.FC = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("/en");
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <div className="layout">
       <Header />

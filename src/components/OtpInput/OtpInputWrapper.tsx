@@ -1,10 +1,12 @@
 import { FC } from "react";
-import UseOtpInputWrapperLogic from "./UseOtpInputWrapperLogic";
+import useOtpInputWrapperLogic from "./useOtpInputWrapperLogic";
 
-const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({
+
+
+const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({ 
   inputsQuantity,
 }) => {
-  const { handleInputChange, otpValues, inputRefs } = UseOtpInputWrapperLogic({
+  const { handleInputChange, otpValues, inputRefs } = useOtpInputWrapperLogic({
     inputsQuantity,
   });
 

@@ -1,29 +1,76 @@
 import { FC } from "react";
-import { CountryData } from "../static/Interfaces";
 import { AiOutlineLike } from "react-icons/ai";
-import { CountryAction } from "../Reducer/countryReducer";
+import useCharacteristicsLogic, { CountryInfoProps } from "./useCharacteristicsLogic";
 
-interface CountryInfoProps {
-  el: CountryData;
-  index: number;
-  countryState: CountryData[];
-  dispatch: React.Dispatch<CountryAction>;
-}
 
 const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
-  const handleLikeClick = () => {
-    dispatch({ type: "INCREMENT_LIKE", payload: { index } });
-  };
+  const { 
+    isEditing,
+    editedName,
+    editedCapital,
+    setEditedName,
+    setEditedCapital,
+    setEditedPopulation,
+    editedPopulation,
+    handleSaveClick,
+    handleCancelClick,
+    handleFileChange,
+    handleEditClick,
+    handleLikeClick
+  } = useCharacteristicsLogic({ dispatch, el, index });
 
   return (
     <div className="characteristics">
       <div className="characteristic">
-        <span>{el.name}</span>
-        <br />
-        <span>{el.capital}</span>
-        <br />
-        <span>{el.population}</span>
-        <br />
+        {isEditing ? (
+          <>
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+            />
+            <br />
+            <input
+              type="text"
+              value={editedCapital}
+              onChange={(e) => setEditedCapital(e.target.value)}
+            />
+            <br />
+            <input
+              type="text"
+              value={editedPopulation}
+              onChange={(e) => setEditedPopulation(e.target.value)}
+            />
+            <br />
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <br />
+            <button
+              className="country-edit-save-btn country-edit-btn"
+              onClick={handleSaveClick}
+            >
+              Save
+            </button>
+            <button
+              className="country-edit-undo-btn country-edit-btn"
+              onClick={handleCancelClick}
+            >
+              Undo
+            </button>
+          </>
+        ) : (
+          <>
+            <span>{editedName}</span>
+            <br />
+            <span>{editedCapital}</span>
+            <br />
+            <span>{editedPopulation}</span>
+            <br />
+            <button className="country-edit-btn" onClick={handleEditClick}>
+              Edit
+            </button>
+          </>
+        )}
+
         <div onClick={handleLikeClick} className="like-icon">
           <span>{el.likes}</span>
           <AiOutlineLike />

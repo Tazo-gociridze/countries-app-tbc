@@ -5,14 +5,15 @@ import { Link, useLocation } from "react-router-dom";
 import { LanguageContext } from "../../App";
 
 const Header: React.FC = () => {
-  const { switchLang, setSwitchLang, dispatch } = useContext(LanguageContext);
+  const { switchLang, setSwitchLang, dispatch, state } = useContext(LanguageContext);
   const location = useLocation();
   const pagePath = location.pathname.slice(3);
 
   const handleLanguageChange = (newLang: string) => {
-    dispatch({ type: "CHANGE_LANGUAGE", payload: { switchLang: newLang } });
+    dispatch({ type: "CHANGE_LANGUAGE", payload: { switchLang: newLang, state} });
     setSwitchLang(newLang);
   };
+  
 
   return (
     <>

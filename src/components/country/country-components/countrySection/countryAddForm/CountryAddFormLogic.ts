@@ -3,6 +3,8 @@ import { LanguageContext } from "../../../../../App";
 import { CountryData } from "@components/country/static/Interfaces";
 import { CountryAction } from "@components/country/Reducer/countryReducer";
 
+import axios from "axios";
+
 export interface DispatchType {
   dispatch: Dispatch<CountryAction>;
   typeOfLanguage: string;
@@ -10,14 +12,8 @@ export interface DispatchType {
 
 type Dispatch<A extends CountryAction> = (action: A) => void;
 
-export const useCountryAddFormLogic = ({
-  dispatch,
-  inputLanguage,
-}: {
-  dispatch: Dispatch<CountryAction>;
-  inputLanguage: string;
-}) => {
-  const { switchLang } = useContext(LanguageContext);
+export const useCountryAddFormLogic = () => {
+  const { switchLang, countryAdded, setCountryAdded } = useContext(LanguageContext);
 
   const [newCountryFlagFile, setNewCountryFlagFile] = useState<File | null>(
     null,
@@ -37,83 +33,75 @@ export const useCountryAddFormLogic = ({
   const [populationError, setPopulationError] = useState("");
 
   const handleFlagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      const allowedTypes = ["image/png", "image/jpeg"];
-      if (allowedTypes.includes(file.type)) {
-        setNewCountryFlagFile(file);
-        setErrorMessage(null);
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const fileType = file.type;
+      if (fileType === 'image/png' || fileType === 'image/jpeg') {
+        setNewCountryFlagFile(file); 
       } else {
-        setErrorMessage("Please upload file in PNG or JPG format.");
+        setErrorMessage("Please select a PNG or JPG file"); 
       }
     } else {
-      setNewCountryFlagFile(null);
-      setErrorMessage(null);
+      setNewCountryFlagFile(null); 
     }
   };
 
-  const handleAddCountry = (e: React.FormEvent<HTMLFormElement>) => {
+  const uploadFile = (file: File) => {
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.onload = (e) => {
+        if (typeof e.target?.result === 'string') {
+          resolve(e.target.result); 
+        } else {
+          reject('Ошибка при чтении файла'); 
+        }
+      };
+      reader.onerror = reject; 
+      reader.readAsDataURL(file); 
+    });
+  };
+
+  const handleAddCountry = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let flagPath = "";
-    if (newCountryFlagFile) {
-      flagPath = URL.createObjectURL(newCountryFlagFile);
-    }
-
-    const newCountryEng: CountryData = {
-      id: String(Math.random()),
-      flagUrl: flagPath,
-      name: newCountryNameEng,
-      capital: newCountryCapitalEng,
-      population: newCountryPopulationEng || "0",
-      likes: 0,
-    };
-
-    const newCountryGeo: CountryData = {
-      id: String(Math.random()),
-      flagUrl: flagPath,
-      name: newCountryNameGeo,
-      capital: newCountryCapitalGeo,
-      population: newCountryPopulationGeo || "0",
-      likes: 0,
-    };
-
-    if (inputLanguage === "english") {
+    try {
       if (
         newCountryNameEng.length !== 0 &&
         newCountryCapitalEng.length !== 0 &&
-        newCountryPopulationEng.length !== 0
+        newCountryPopulationEng.length !== 0 &&
+        newCountryFlagFile 
       ) {
-        dispatch({
-          type: "ADD_COUNTRY",
-          payload: { newCountryEng },
-        });
-      }
-    } else if (inputLanguage === "georgian") {
-      if (
-        newCountryNameGeo.length !== 0 &&
-        newCountryCapitalGeo.length !== 0 &&
-        newCountryPopulationGeo.length !== 0
-      ) {
-        dispatch({
-          type: "ADD_COUNTRY",
-          payload: { newCountryGeo },
-        });
-      }
-    }
+        const flagUrl = await uploadFile(newCountryFlagFile); 
 
-    setNewCountryNameEng("");
-    setNewCountryCapitalEng("");
-    setNewCountryPopulationEng("");
-    setNewCountryNameGeo("");
-    setNewCountryCapitalGeo("");
-    setNewCountryPopulationGeo("");
-    setNewCountryFlagFile(null);
-    setNameError("");
-    setCapitalError("");
-    setPopulationError("");
-    setErrorMessage(null);
+        const newCountry: CountryData = {
+          id: String(Math.random()),
+          flagUrl: flagUrl, 
+          name: newCountryNameEng,
+          capital: newCountryCapitalEng,
+          population: newCountryPopulationEng || '0',
+          likes: 0,
+        };
+  
+        await axios.post('http://localhost:3000/countries', newCountry);
+
+        setNewCountryNameEng("");
+        setNewCountryCapitalEng("");
+        setNewCountryPopulationEng("");
+        setNewCountryNameGeo("");
+        setNewCountryCapitalGeo("");
+        setNewCountryPopulationGeo("");
+        setNewCountryFlagFile(null);
+        setNameError("");
+        setCapitalError("");
+        setPopulationError("");
+        setErrorMessage(null);
+        setCountryAdded(!countryAdded)
+      } else {
+        setErrorMessage("Please fill in all fields"); 
+      }
+    } catch (error) {
+      console.error("Error adding country:", error);
+    }
   };
 
   const countryNameTargetHandlerEng = (

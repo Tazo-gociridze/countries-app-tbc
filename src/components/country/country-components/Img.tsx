@@ -1,7 +1,6 @@
 import { FC } from "react";
 
-const Img: FC<{ flagUrl: string | null }> = ({ flagUrl }) => {
-  console.log(flagUrl);
+const Img: FC<{ flagUrl: string | unknown }> = ({ flagUrl }) => {
   return (
     <div
       style={{ backgroundImage: `url(${flagUrl})` }}

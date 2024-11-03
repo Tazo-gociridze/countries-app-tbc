@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./Layout";
 import Home from "./pages/Home";
@@ -6,33 +6,45 @@ import About from "./pages/About";
 import Country from "./pages/Country";
 import Contact from "./pages/Contact";
 import SingleCountry from "@components/country/country-components/SingleCountry";
-import React, { FC, useState, createContext, useReducer } from "react";
-import {
-  CountryAction,
-  CountryState,
-  countryReducer,
-} from "@components/country/Reducer/countryReducer";
-import { countryCharacteristics } from "@components/country/Reducer/state";
+import React, { FC, useState, createContext, useReducer, useEffect } from "react";
+import { CountryAction ,CountryState ,countryReducer, } from "@components/country/Reducer/countryReducer";
 import OtpInput from "./pages/OtpInput";
+import axios from "axios";
 
+//eslint-disable-next-line
 export const LanguageContext = createContext({
   switchLang: "en",
   setSwitchLang: undefined as unknown as (newLang: string) => void,
   dispatch: undefined as unknown as React.Dispatch<CountryAction>,
+  state: undefined as unknown as CountryState,
+  setCountryAdded: undefined as unknown as (value: boolean) => void,
+  countryAdded: undefined as unknown as boolean,
 });
 
 const App: FC = () => {
   const [switchLang, setSwitchLang] = useState("en");
+  const [countryAdded, setCountryAdded] = useState(false);
   const [state, dispatch] = useReducer(countryReducer, {
     switchLang: switchLang,
-    countries: [...countryCharacteristics.en],
+    countries: [], 
   } as CountryState);
+
+  
+  useEffect(() => {
+    axios.get('http://localhost:3000/countries')
+      .then(res => {
+        dispatch({ type: 'FETCH_COUNTRIES_SUCCESS', payload:{resData: res.data}});
+      })
+      .catch(error => console.error('Error while retrieving data:', error));
+      //eslint-disable-next-line  
+  }, [countryAdded]);
 
   return (
     <BrowserRouter>
-      <LanguageContext.Provider value={{ switchLang, setSwitchLang, dispatch }}>
+      <LanguageContext.Provider value={{ switchLang, setSwitchLang, dispatch, state, setCountryAdded, countryAdded}}>
         <Routes>
           <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to={'/en'}/>}></Route>
             <Route path="/:lang" element={<Home />}></Route>
             <Route path="/:lang/about" element={<About />}></Route>
             <Route

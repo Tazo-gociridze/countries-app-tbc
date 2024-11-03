@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import Characteristics from "./Characteristics";
 import { CountryAction } from "../Reducer/countryReducer";
 import { LanguageContext } from "../../../App";
+import axios from 'axios';
+
 
 interface WrapperProps {
-  flagUrl: string | null;
+  flagUrl: string | unknown;
   el: CountryData;
   countryIndex: number;
   countriesState: CountryData[];
@@ -24,10 +26,19 @@ const Wrapper: React.FC<WrapperProps> = (props) => {
     countryIndex,
     countriesState,
     dispatch,
-    onDelete,
     onRevive,
   } = props;
   const id = el.id;
+
+  const handleDelete = async () => {
+    try {
+
+      await axios.delete(`http://localhost:3000/countries/${el.id}`);
+      dispatch({ type: 'DELETE_COUNTRY', payload: { index: countryIndex } });
+    } catch (error) {
+      console.error('Error deleting country:', error);
+    }
+  };
 
   return (
     <div
@@ -42,7 +53,8 @@ const Wrapper: React.FC<WrapperProps> = (props) => {
         countryState={countriesState}
         dispatch={dispatch}
       />
-      <button onClick={onDelete} className="delete-btn">
+
+      <button onClick={handleDelete} className="delete-btn">
         {switchLang === "en" ? "Delete" : "წაშლა"}
       </button>
       {el.isDeleted ? (

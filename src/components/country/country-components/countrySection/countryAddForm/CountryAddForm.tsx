@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { DispatchType, useCountryAddFormLogic } from "./CountryAddFormLogic";
 
 const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
+
   const [inputLanguage, setInputLanguage] = useState("english");
+  const [isAddCountry, setIsAddCountry] = useState(false)
 
   const {
     switchLang,
@@ -25,6 +27,7 @@ const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
     countryCapitalTargetHandlerGeo,
     countryPopulationTargetHandlerGeo,
   } = useCountryAddFormLogic({ dispatch, inputLanguage });
+
 
   return (
     <form className="create-country-form" onSubmit={handleAddCountry} action="">
@@ -95,7 +98,7 @@ const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
 
       <input type="file" accept="image/" onChange={handleFlagChange} />
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      <button>
+      <button onClick={() => setIsAddCountry(!isAddCountry)}>
         {switchLang === "en" ? "add country" : "ქვეყნის დამატება"}
       </button>
     </form>

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-const UseOtpInputWrapperLogic = ({
+const useOtpInputWrapperLogic = ({
   inputsQuantity,
 }: {
   inputsQuantity: number;
@@ -14,7 +14,7 @@ const UseOtpInputWrapperLogic = ({
     const sanitizedValue = value.replace(/[^0-9]/g, "");
 
     if (sanitizedValue.length > 1) {
-      const digits = sanitizedValue.split('');
+      const digits = sanitizedValue.split("");
       const newOtpValues = [...otpValues];
       digits.forEach((digit, i) => {
         if (i + index < inputsQuantity) {
@@ -48,4 +48,4 @@ const UseOtpInputWrapperLogic = ({
   };
 };
 
-export default UseOtpInputWrapperLogic;
+export default useOtpInputWrapperLogic;
