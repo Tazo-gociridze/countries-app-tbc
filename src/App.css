@@ -298,7 +298,7 @@
       user-select: none;
     }
 
-    input{
+    input {
       height: 40px;
       width: 300px;
       padding: 10px;
@@ -351,7 +351,7 @@
   font-size: 30px;
 }
 
-.country-edit-btn{
+.country-edit-btn {
   width: 100px;
   height: 30px;
   cursor: pointer;
@@ -359,10 +359,9 @@
   background-color: rgb(16, 224, 16);
 }
 
-.country-edit-undo-btn{
- background-color: red !important;
+.country-edit-undo-btn {
+  background-color: red !important;
 }
-
 
 /* Contact page ------>>> */
 

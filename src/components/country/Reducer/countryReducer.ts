@@ -1,6 +1,5 @@
 import { CountryData } from "../static/Interfaces";
 
-
 export interface ChangeLanguagePayload {
   switchLang: string;
 }
@@ -20,7 +19,7 @@ export interface CountryAction {
     | "DELETE_COUNTRY"
     | "REVIVE_COUNTRY"
     | "CHANGE_LANGUAGE"
-    | "FETCH_COUNTRIES_SUCCESS"
+    | "FETCH_COUNTRIES_SUCCESS";
   payload?:
     | {
         index?: number | string;
@@ -29,18 +28,16 @@ export interface CountryAction {
         typeOfLanguage?: string;
         newCountryEng?: CountryData | undefined;
         newCountryGeo?: CountryData | undefined;
-        state?: CountryState | undefined
-        resData?: CountryData
+        state?: CountryState | undefined;
+        resData?: CountryData;
       }
     | CountryData;
 }
-
 
 export const countryReducer = (
   state: CountryState,
   action: CountryAction,
 ): CountryState => {
-  
   switch (action.type) {
     case "SORT_UP":
       return {
@@ -63,7 +60,7 @@ export const countryReducer = (
           ...state.countries.filter((country) => country.isDeleted),
         ],
       };
-      
+
     case "UPDATE_COUNTRIES":
       return {
         ...state,
@@ -80,27 +77,27 @@ export const countryReducer = (
         ),
       };
 
-      case 'ADD_COUNTRY':
-        //eslint-disable-next-line
-        //@ts-ignore
-        return { countries: [action.payload, ...state.countries], ...state,};
+    case "ADD_COUNTRY":
+      //eslint-disable-next-line
+      //@ts-ignore
+      return { countries: [action.payload, ...state.countries], ...state };
 
-      case "DELETE_COUNTRY":
-        if (
-          typeof action.payload?.index === "number" &&
-          action.payload.index >= 0 &&
-          action.payload.index < state.countries.length
-        ) {
-          const deletedCountries = [...state.countries];
-          deletedCountries.splice(action.payload.index, 1); 
-          return {
-            ...state,
-            countries: deletedCountries, 
-          };
-        } else {
-          console.error("action.payload.index is undefined");
-          return state;
-        }
+    case "DELETE_COUNTRY":
+      if (
+        typeof action.payload?.index === "number" &&
+        action.payload.index >= 0 &&
+        action.payload.index < state.countries.length
+      ) {
+        const deletedCountries = [...state.countries];
+        deletedCountries.splice(action.payload.index, 1);
+        return {
+          ...state,
+          countries: deletedCountries,
+        };
+      } else {
+        console.error("action.payload.index is undefined");
+        return state;
+      }
 
     case "REVIVE_COUNTRY":
       if (
@@ -137,7 +134,7 @@ export const countryReducer = (
             : [...state.countries],
       };
 
-      case 'FETCH_COUNTRIES_SUCCESS':
+    case "FETCH_COUNTRIES_SUCCESS":
       //eslint-disable-next-line
       //@ts-ignore
       return { state, countries: action.payload.resData.reverse() };

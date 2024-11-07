@@ -10,6 +10,7 @@ const Nav: FC<{ switchLang: string }> = ({ switchLang }) => {
           { name: "Country", path: "/en/country" },
           { name: "Contact", path: "/en/contact" },
           { name: "OtpInput", path: "/en/otpinput" },
+          { name: "useMutation", path: "/en/usemutation" },
         ]
       : [
           { name: "მთავარი", path: "/ge" },
@@ -17,6 +18,7 @@ const Nav: FC<{ switchLang: string }> = ({ switchLang }) => {
           { name: "ქვეყანა", path: "/ge/country" },
           { name: "კონტაქტი", path: "/ge/contact" },
           { name: "ოტპ ინფუთი", path: "/ge/otpinput" },
+          { name: "მუტაციის ჰუკი", path: "/ge/usemutation" },
         ];
 
   const location = useLocation();

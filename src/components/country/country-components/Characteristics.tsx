@@ -1,10 +1,11 @@
 import { FC } from "react";
 import { AiOutlineLike } from "react-icons/ai";
-import useCharacteristicsLogic, { CountryInfoProps } from "./useCharacteristicsLogic";
-
+import useCharacteristicsLogic, {
+  CountryInfoProps,
+} from "./useCharacteristicsLogic";
 
 const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
-  const { 
+  const {
     isEditing,
     editedName,
     editedCapital,
@@ -16,7 +17,7 @@ const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
     handleCancelClick,
     handleFileChange,
     handleEditClick,
-    handleLikeClick
+    handleLikeClick,
   } = useCharacteristicsLogic({ dispatch, el, index });
 
   return (

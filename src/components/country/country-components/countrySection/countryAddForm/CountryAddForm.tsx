@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { DispatchType, useCountryAddFormLogic } from "./CountryAddFormLogic";
 
-const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
-
+const CountryAddForm: React.FC<DispatchType> = () => {
   const [inputLanguage, setInputLanguage] = useState("english");
-  const [isAddCountry, setIsAddCountry] = useState(false)
+  const [isAddCountry, setIsAddCountry] = useState(false);
 
   const {
     switchLang,
@@ -26,8 +25,8 @@ const CountryAddForm: React.FC<DispatchType> = ({ dispatch }) => {
     countryNameTargetHandlerGeo,
     countryCapitalTargetHandlerGeo,
     countryPopulationTargetHandlerGeo,
-  } = useCountryAddFormLogic({ dispatch, inputLanguage });
-
+  } = useCountryAddFormLogic();
+  
 
   return (
     <form className="create-country-form" onSubmit={handleAddCountry} action="">

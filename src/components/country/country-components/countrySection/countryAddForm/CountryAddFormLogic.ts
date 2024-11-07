@@ -2,8 +2,7 @@ import { useState, useContext } from "react";
 import { LanguageContext } from "../../../../../App";
 import { CountryData } from "@components/country/static/Interfaces";
 import { CountryAction } from "@components/country/Reducer/countryReducer";
-
-import axios from "axios";
+import { addCountry } from "../../../../../api/countries";
 
 export interface DispatchType {
   dispatch: Dispatch<CountryAction>;
@@ -13,7 +12,8 @@ export interface DispatchType {
 type Dispatch<A extends CountryAction> = (action: A) => void;
 
 export const useCountryAddFormLogic = () => {
-  const { switchLang, countryAdded, setCountryAdded } = useContext(LanguageContext);
+  const { switchLang, countryAdded, setCountryAdded } =
+    useContext(LanguageContext);
 
   const [newCountryFlagFile, setNewCountryFlagFile] = useState<File | null>(
     null,
@@ -36,13 +36,13 @@ export const useCountryAddFormLogic = () => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       const fileType = file.type;
-      if (fileType === 'image/png' || fileType === 'image/jpeg') {
-        setNewCountryFlagFile(file); 
+      if (fileType === "image/png" || fileType === "image/jpeg") {
+        setNewCountryFlagFile(file);
       } else {
-        setErrorMessage("Please select a PNG or JPG file"); 
+        setErrorMessage("Please select a PNG or JPG file");
       }
     } else {
-      setNewCountryFlagFile(null); 
+      setNewCountryFlagFile(null);
     }
   };
 
@@ -50,14 +50,14 @@ export const useCountryAddFormLogic = () => {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
       reader.onload = (e) => {
-        if (typeof e.target?.result === 'string') {
-          resolve(e.target.result); 
+        if (typeof e.target?.result === "string") {
+          resolve(e.target.result);
         } else {
-          reject('Ошибка при чтении файла'); 
+          reject("Ошибка при чтении файла");
         }
       };
-      reader.onerror = reject; 
-      reader.readAsDataURL(file); 
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
     });
   };
 
@@ -69,20 +69,20 @@ export const useCountryAddFormLogic = () => {
         newCountryNameEng.length !== 0 &&
         newCountryCapitalEng.length !== 0 &&
         newCountryPopulationEng.length !== 0 &&
-        newCountryFlagFile 
+        newCountryFlagFile
       ) {
-        const flagUrl = await uploadFile(newCountryFlagFile); 
+        const flagUrl = await uploadFile(newCountryFlagFile);
 
         const newCountry: CountryData = {
           id: String(Math.random()),
-          flagUrl: flagUrl, 
+          flagUrl: flagUrl,
           name: newCountryNameEng,
           capital: newCountryCapitalEng,
-          population: newCountryPopulationEng || '0',
+          population: newCountryPopulationEng || "0",
           likes: 0,
         };
-  
-        await axios.post('http://localhost:3000/countries', newCountry);
+
+        addCountry({newCountry})
 
         setNewCountryNameEng("");
         setNewCountryCapitalEng("");
@@ -95,9 +95,11 @@ export const useCountryAddFormLogic = () => {
         setCapitalError("");
         setPopulationError("");
         setErrorMessage(null);
-        setCountryAdded(!countryAdded)
+        setCountryAdded(!countryAdded);
+        
+        return {newCountry}
       } else {
-        setErrorMessage("Please fill in all fields"); 
+        setErrorMessage("Please fill in all fields");
       }
     } catch (error) {
       console.error("Error adding country:", error);

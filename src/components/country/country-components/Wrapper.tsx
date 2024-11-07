@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import Characteristics from "./Characteristics";
 import { CountryAction } from "../Reducer/countryReducer";
 import { LanguageContext } from "../../../App";
-import axios from 'axios';
-
+import { deleteCountry } from "../../../api/countries";
 
 interface WrapperProps {
   flagUrl: string | unknown;
@@ -20,24 +19,11 @@ interface WrapperProps {
 
 const Wrapper: React.FC<WrapperProps> = (props) => {
   const { switchLang } = useContext(LanguageContext);
-  const {
-    flagUrl,
-    el,
-    countryIndex,
-    countriesState,
-    dispatch,
-    onRevive,
-  } = props;
+  const { flagUrl, el, countryIndex, countriesState, dispatch, onRevive } = props;
   const id = el.id;
 
-  const handleDelete = async () => {
-    try {
-
-      await axios.delete(`http://localhost:3000/countries/${el.id}`);
-      dispatch({ type: 'DELETE_COUNTRY', payload: { index: countryIndex } });
-    } catch (error) {
-      console.error('Error deleting country:', error);
-    }
+  const handleDelete = () => {
+    deleteCountry({dispatch, id, countryIndex})
   };
 
   return (
