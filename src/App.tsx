@@ -6,8 +6,18 @@ import About from "./pages/About";
 import Country from "./pages/Country";
 import Contact from "./pages/Contact";
 import SingleCountry from "@components/country/country-components/SingleCountry";
-import React, { FC, useState, createContext, useReducer, useEffect} from "react";
-import { CountryAction, CountryState, countryReducer } from "@components/country/Reducer/countryReducer";
+import React, {
+  FC,
+  useState,
+  createContext,
+  useReducer,
+  useEffect,
+} from "react";
+import {
+  CountryAction,
+  CountryState,
+  countryReducer,
+} from "@components/country/Reducer/countryReducer";
 import OtpInput from "./pages/OtpInput";
 import { getCountries } from "./api/countries";
 import { useQuery } from "@tanstack/react-query";
@@ -31,17 +41,15 @@ const App: FC = () => {
     countries: [],
   } as CountryState);
 
-  const { isLoading, error, refetch} = useQuery({
-    queryKey: ['countries'], 
-    queryFn: () => getCountries({dispatch}),
+  const { isLoading, error, refetch } = useQuery({
+    queryKey: ["countries"],
+    queryFn: () => getCountries({ dispatch }),
   });
-
-  // const { mutate } = useMutation({mutationFn: addCountry})
 
   useEffect(() => {
     if (countryAdded) {
-      setCountryAdded(!countryAdded); 
-      refetch()
+      setCountryAdded(!countryAdded);
+      refetch();
     }
   }, [countryAdded, refetch]);
 

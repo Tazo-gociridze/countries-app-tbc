@@ -13,6 +13,7 @@ const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
     setEditedCapital,
     setEditedPopulation,
     editedPopulation,
+    editingCountryMutation,
     handleSaveClick,
     handleCancelClick,
     handleFileChange,
@@ -45,12 +46,22 @@ const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
             <br />
             <input type="file" accept="image/*" onChange={handleFileChange} />
             <br />
-            <button
-              className="country-edit-save-btn country-edit-btn"
-              onClick={handleSaveClick}
-            >
-              Save
-            </button>
+            {editingCountryMutation.isPending ? (
+              <button
+                disabled
+                className="country-edit-save-btn country-edit-btn"
+                onClick={handleSaveClick}
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                className="country-edit-save-btn country-edit-btn"
+                onClick={handleSaveClick}
+              >
+                Save
+              </button>
+            )}
             <button
               className="country-edit-undo-btn country-edit-btn"
               onClick={handleCancelClick}

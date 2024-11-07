@@ -3,6 +3,7 @@ import { LanguageContext } from "../../../../../App";
 import { CountryData } from "@components/country/static/Interfaces";
 import { CountryAction } from "@components/country/Reducer/countryReducer";
 import { addCountry } from "../../../../../api/countries";
+import { useMutation } from "@tanstack/react-query";
 
 export interface DispatchType {
   dispatch: Dispatch<CountryAction>;
@@ -31,6 +32,7 @@ export const useCountryAddFormLogic = () => {
   const [nameError, setNameError] = useState("");
   const [capitalError, setCapitalError] = useState("");
   const [populationError, setPopulationError] = useState("");
+  
 
   const handleFlagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -61,6 +63,9 @@ export const useCountryAddFormLogic = () => {
     });
   };
 
+
+  const addCountryMutation = useMutation({mutationFn:addCountry});
+
   const handleAddCountry = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -82,7 +87,15 @@ export const useCountryAddFormLogic = () => {
           likes: 0,
         };
 
-        addCountry({newCountry})
+        // ქვეყნის დამატება მუტაციით
+        addCountryMutation.mutate({newCountry}, {
+          onSuccess: () => {
+            console.log('country added')
+          },
+          onError: (error) => {
+            console.error('erroe for adding country', error);
+          },
+        })
 
         setNewCountryNameEng("");
         setNewCountryCapitalEng("");
@@ -96,8 +109,8 @@ export const useCountryAddFormLogic = () => {
         setPopulationError("");
         setErrorMessage(null);
         setCountryAdded(!countryAdded);
-        
-        return {newCountry}
+
+        return { newCountry };
       } else {
         setErrorMessage("Please fill in all fields");
       }
@@ -164,6 +177,7 @@ export const useCountryAddFormLogic = () => {
     newCountryFlagFile,
     setNewCountryFlagFile,
     errorMessage,
+    addCountryMutation,
     setErrorMessage,
     handleFlagChange,
     handleAddCountry,

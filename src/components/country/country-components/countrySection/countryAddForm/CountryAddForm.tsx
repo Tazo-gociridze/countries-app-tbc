@@ -17,6 +17,7 @@ const CountryAddForm: React.FC<DispatchType> = () => {
     newCountryCapitalEng,
     newCountryCapitalGeo,
     errorMessage,
+    addCountryMutation,
     handleFlagChange,
     handleAddCountry,
     countryNameTargetHandlerEng,
@@ -26,7 +27,6 @@ const CountryAddForm: React.FC<DispatchType> = () => {
     countryCapitalTargetHandlerGeo,
     countryPopulationTargetHandlerGeo,
   } = useCountryAddFormLogic();
-  
 
   return (
     <form className="create-country-form" onSubmit={handleAddCountry} action="">
@@ -97,9 +97,15 @@ const CountryAddForm: React.FC<DispatchType> = () => {
 
       <input type="file" accept="image/" onChange={handleFlagChange} />
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      <button onClick={() => setIsAddCountry(!isAddCountry)}>
-        {switchLang === "en" ? "add country" : "ქვეყნის დამატება"}
-      </button>
+      {addCountryMutation.isPending ? (
+        <button disabled onClick={() => setIsAddCountry(!isAddCountry)}>
+          {switchLang === "en" ? "add country" : "ქვეყნის დამატება"}
+        </button>
+      ) : (
+        <button onClick={() => setIsAddCountry(!isAddCountry)}>
+          {switchLang === "en" ? "add country" : "ქვეყნის დამატება"}
+        </button>
+      )}
     </form>
   );
 };

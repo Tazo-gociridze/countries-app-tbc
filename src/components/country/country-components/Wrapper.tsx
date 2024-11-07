@@ -6,6 +6,7 @@ import Characteristics from "./Characteristics";
 import { CountryAction } from "../Reducer/countryReducer";
 import { LanguageContext } from "../../../App";
 import { deleteCountry } from "../../../api/countries";
+import { useMutation } from "@tanstack/react-query";
 
 interface WrapperProps {
   flagUrl: string | unknown;
@@ -19,11 +20,21 @@ interface WrapperProps {
 
 const Wrapper: React.FC<WrapperProps> = (props) => {
   const { switchLang } = useContext(LanguageContext);
-  const { flagUrl, el, countryIndex, countriesState, dispatch, onRevive } = props;
+  const { flagUrl, el, countryIndex, countriesState, dispatch, onRevive } =
+    props;
   const id = el.id;
 
+  const deleteMutation = useMutation({mutationFn:deleteCountry});
+
   const handleDelete = () => {
-    deleteCountry({dispatch, id, countryIndex})
+    deleteMutation.mutate(3, {
+      onSuccess: () => {
+        dispatch({ type: "DELETE_COUNTRY", payload: { index: countryIndex } });
+      },
+      onError: (error) => {
+        console.error("Error deleting country:", error);
+      },
+    }); 
   };
 
   return (

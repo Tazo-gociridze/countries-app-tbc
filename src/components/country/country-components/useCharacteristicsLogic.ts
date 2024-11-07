@@ -1,8 +1,10 @@
-import axios from "axios";
+
 import { useContext, useState } from "react";
 import { LanguageContext } from "../../../App";
 import { CountryData } from "../static/Interfaces";
 import { CountryAction } from "../Reducer/countryReducer";
+import { useMutation } from "@tanstack/react-query";
+import { editingCountry } from "../../../api/countries";
 
 export interface CountryInfoProps {
   el: CountryData;
@@ -50,25 +52,32 @@ const useCharacteristicsLogic = ({
     });
   };
 
+  const editingCountryMutation = useMutation({mutationFn: editingCountry})
+
+  // ქვეყნის რედაქთირება მუტაციით
   const handleSaveClick = async () => {
     try {
       if (selectedFile) {
         const flagUrl = await uploadFile(selectedFile);
-        await axios.put(`http://localhost:3000/countries/${el.id}`, {
+        const updatedCountry = {
+          id: el.id,
           name: editedName,
           capital: editedCapital,
           population: editedPopulation,
           likes: el.likes,
           flagUrl: flagUrl,
-        });
+        };
+        await editingCountryMutation.mutate(updatedCountry); 
       } else {
-        await axios.put(`http://localhost:3000/countries/${el.id}`, {
+        const updatedCountry = {
+          id: el.id,
           name: editedName,
           capital: editedCapital,
           population: editedPopulation,
           likes: el.likes,
           flagUrl: el.flagUrl,
-        });
+        };
+        await editingCountryMutation.mutate(updatedCountry); 
       }
       setCountryAdded(!countryAdded);
       setIsEditing(false);
@@ -95,6 +104,7 @@ const useCharacteristicsLogic = ({
     setEditedName,
     setEditedCapital,
     setEditedPopulation,
+    editingCountryMutation,
     editedPopulation,
     handleSaveClick,
     handleCancelClick,

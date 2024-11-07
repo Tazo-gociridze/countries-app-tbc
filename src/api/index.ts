@@ -1,8 +1,7 @@
-import axios, { CreateAxiosDefaults } from "axios"
-
+import axios, { CreateAxiosDefaults } from "axios";
 
 const axiosConfig: CreateAxiosDefaults = {
-    baseURL: 'http://localhost:3000'
-}
+  baseURL: "http://localhost:3000",
+};
 
-export const httpClient = axios.create(axiosConfig)
+export const httpClient = axios.create(axiosConfig);

@@ -22,7 +22,7 @@ const fetchCountries = async () => {
         body: JSON.stringify(country),
       });
     }
-    
+
     console.log("countries added in JSON Server");
   } catch (error) {
     console.error("Error fetching countries:", error);
