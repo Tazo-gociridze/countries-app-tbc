@@ -1,16 +1,25 @@
 import { useContext } from "react";
 import { FaSortDown, FaSortUp } from "react-icons/fa";
 import { LanguageContext } from "../../../../App";
-import { DispatchType } from "./countryAddForm/CountryAddFormLogic";
+import { useSearchParams } from "react-router-dom";
 
-const SortBtns: React.FC<DispatchType> = ({ dispatch }) => {
-  const { switchLang } = useContext(LanguageContext);
+interface SortBtnsProps {
+  refetch: () => void;
+}
+
+const SortBtns: React.FC<SortBtnsProps> = ({refetch}) => {
+  const { switchLang, } = useContext(LanguageContext);
+  //eslint-disable-next-line
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const handleSortUp = () => {
-    dispatch({ type: "SORT_UP" });
+    setSearchParams({ sort: "-likes" });
+    refetch()
   };
 
   const handleSortDown = () => {
-    dispatch({ type: "SORT_DOWN" });
+    setSearchParams({ sort: "likes" });
+    refetch()
   };
 
   return (

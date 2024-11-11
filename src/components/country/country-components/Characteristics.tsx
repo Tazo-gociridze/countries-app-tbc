@@ -4,7 +4,10 @@ import useCharacteristicsLogic, {
   CountryInfoProps,
 } from "./useCharacteristicsLogic";
 
-const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
+const Characteristics: FC<CountryInfoProps> = ({
+  el,
+  countryLikes,
+}) => {
   const {
     isEditing,
     editedName,
@@ -19,7 +22,7 @@ const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
     handleFileChange,
     handleEditClick,
     handleLikeClick,
-  } = useCharacteristicsLogic({ dispatch, el, index });
+  } = useCharacteristicsLogic({ el, countryLikes });
 
   return (
     <div className="characteristics">
@@ -83,8 +86,8 @@ const Characteristics: FC<CountryInfoProps> = ({ el, index, dispatch }) => {
           </>
         )}
 
-        <div onClick={handleLikeClick} className="like-icon">
-          <span>{el.likes}</span>
+        <div onClick={() => handleLikeClick({ el, countryLikes })} className="like-icon">
+          <span>{countryLikes}</span>
           <AiOutlineLike />
         </div>
       </div>

@@ -1,29 +1,30 @@
 import { useParams } from "react-router-dom";
-import { CountryData } from "../static/Interfaces";
-import { CountryState } from "../Reducer/countryReducer";
+import { useEffect, useState } from "react";
+import { countryDetailPage } from "../../../api/countries";
 
-const SingleCountry = ({
-  countriesState,
-}: {
-  countriesState: CountryState;
-}) => {
+const SingleCountry = () => {
   const { id } = useParams();
+  const [specificСountry, setSpecificCountry] = useState({
+    name: "",
+    capital: "",
+    population: "",
+  });
 
-  const countryInfo: CountryData | undefined = countriesState.countries.find(
-    (country) => country.id.toString() === id,
-  );
 
-  if (!countryInfo) {
-    return <p>Page in not found</p>;
-  }
+  useEffect(() => {
+    if (id) {
+      countryDetailPage({ id }).then((res) => setSpecificCountry(res?.data))
+    }
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="single-country__wrapper">
-      <span>{countryInfo.name}</span>
+      <span>{specificСountry.name}</span>
       <br />
-      <span>{countryInfo.capital}</span>
+      <span>{specificСountry.capital}</span>
       <br />
-      <span>{countryInfo.population}</span>
+      <span>{specificСountry.population}</span>
       <br />
     </div>
   );

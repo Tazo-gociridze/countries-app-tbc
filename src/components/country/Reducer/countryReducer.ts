@@ -5,6 +5,7 @@ export interface ChangeLanguagePayload {
 }
 
 export interface CountryState {
+
   switchLang: string;
   countries: CountryData[];
 }
@@ -137,7 +138,7 @@ export const countryReducer = (
     case "FETCH_COUNTRIES_SUCCESS":
       //eslint-disable-next-line
       //@ts-ignore
-      return { state, countries: action.payload.resData.reverse() };
+      return { state, countries: action.payload.resData };
 
     default:
       return state;

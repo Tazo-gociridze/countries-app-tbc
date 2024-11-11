@@ -1,36 +1,46 @@
-
 import { useContext, useState } from "react";
 import { LanguageContext } from "../../../App";
 import { CountryData } from "../static/Interfaces";
 import { CountryAction } from "../Reducer/countryReducer";
 import { useMutation } from "@tanstack/react-query";
-import { editingCountry } from "../../../api/countries";
+import { editingCountry, updateLikes } from "../../../api/countries";
+import { countryComponentContext } from "./countrySection/CountryComponent";
 
 export interface CountryInfoProps {
   el: CountryData;
   index: number;
   countryState: CountryData[];
+  countryLikes: number;
   dispatch: React.Dispatch<CountryAction>;
 }
 
 const useCharacteristicsLogic = ({
-  dispatch,
   el,
-  index,
+  countryLikes
 }: {
-  dispatch: React.Dispatch<CountryAction>;
-  el: CountryData;
-  index: number;
+  el: CountryData,
+  countryLikes: number
 }) => {
-  const { countryAdded, setCountryAdded } = useContext(LanguageContext);
+  const { countryAdded, setCountryAdded} = useContext(LanguageContext);
+  const { refetch } = useContext(countryComponentContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(el.name);
   const [editedCapital, setEditedCapital] = useState(el.capital);
   const [editedPopulation, setEditedPopulation] = useState(el.population);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleLikeClick = () => {
-    dispatch({ type: "INCREMENT_LIKE", payload: { index } });
+  const likesMutation = useMutation({ mutationFn: updateLikes});
+
+  const handleLikeClick = ({ el }: { el: CountryData, countryLikes: number }) => {
+    likesMutation.mutate({ el, countryLikes }, {
+      onSuccess: () => {
+        console.log('isSuccsess')
+        refetch()
+      },
+      onError: () => {
+        console.log('error for increment likes')
+      }
+    }); 
   };
 
   const handleEditClick = () => {
@@ -52,7 +62,7 @@ const useCharacteristicsLogic = ({
     });
   };
 
-  const editingCountryMutation = useMutation({mutationFn: editingCountry})
+  const editingCountryMutation = useMutation({ mutationFn: editingCountry });
 
   // ქვეყნის რედაქთირება მუტაციით
   const handleSaveClick = async () => {
@@ -67,7 +77,7 @@ const useCharacteristicsLogic = ({
           likes: el.likes,
           flagUrl: flagUrl,
         };
-        await editingCountryMutation.mutate(updatedCountry); 
+        await editingCountryMutation.mutate(updatedCountry);
       } else {
         const updatedCountry = {
           id: el.id,
@@ -77,10 +87,11 @@ const useCharacteristicsLogic = ({
           likes: el.likes,
           flagUrl: el.flagUrl,
         };
-        await editingCountryMutation.mutate(updatedCountry); 
+        await editingCountryMutation.mutate(updatedCountry);
       }
       setCountryAdded(!countryAdded);
       setIsEditing(false);
+      refetch();
     } catch (error) {
       console.error("Error updating country:", error);
     }

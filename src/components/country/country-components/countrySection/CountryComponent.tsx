@@ -1,58 +1,112 @@
 import Wrapper from "../Wrapper";
 import SortBtns from "./SortBtns";
 import CountryAddForm from "./countryAddForm/CountryAddForm";
-import React, { Dispatch } from "react";
-import {
-  CountryAction,
-  CountryState,
-} from "@components/country/Reducer/countryReducer";
+import React, { Dispatch, useRef, createContext, useEffect } from "react";
+import { CountryAction } from "@components/country/Reducer/countryReducer";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getCountries } from "../../../../api/countries";
+import { useSearchParams } from "react-router-dom";
+import { httpClient } from "../../../../api";
+import { useInView } from "react-intersection-observer";
 
 export interface countryStateType {
-  countriesState: CountryState;
   switchLangDispatch: Dispatch<CountryAction>;
 }
 
+export const countryComponentContext = createContext({
+    refetch: () => {},
+})
+
 const CountryComponent: React.FC<countryStateType> = ({
-  countriesState,
   switchLangDispatch,
 }) => {
-  const handleDeleteCountry = (index: number) => {
-    switchLangDispatch({ type: "DELETE_COUNTRY", payload: { index } });
-  };
+  const parentRef = useRef<HTMLDivElement>(null);
+  //eslint-disable-next-line
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleReviveCountry = (index: number) => {
-    switchLangDispatch({ type: "REVIVE_COUNTRY", payload: { index } });
-  };
+  httpClient.get('/countries?_page=1&_per_page=5&_next').then((next) => console.log(next.data))
 
-  return (
-    <>
-      <div>
-        {/* eslint-disable-next-line */}
-        {/* @ts-ignore */}
-        <SortBtns dispatch={switchLangDispatch} />
-        <div className="country__section">
-          <div style={{ display: "flex", gap: "10px" }}>
-            <CountryAddForm
-              dispatch={switchLangDispatch}
-              typeOfLanguage={"eng"}
-            />
+  const {
+    isLoading,
+    error,
+    data,
+    refetch,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['countries-fetch', searchParams],
+    queryFn: ({ pageParam }) => getCountries(searchParams, pageParam),
+    initialPageParam: 1,
+    //eslint-disable-next-line
+    //@ts-ignore
+    getNextPageParam: (lastPage) => lastPage.next
+  });
+
+  const {ref, inView} = useInView()
+
+
+  const rowVirtualizer = useVirtualizer({
+    //eslint-disable-next-line
+    //@ts-ignore
+    count: data?.pages?.reduce((acc, page) => acc + page.data.length, 0) || 0,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 195,
+  });
+
+  useEffect(() => {
+     if(inView){
+      fetchNextPage()
+      console.log('asd')
+     }
+  }, [fetchNextPage, inView]);
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  //eslint-disable-next-line
+  //@ts-ignore
+  if (data?.pages[0].data) {
+    return (
+      <countryComponentContext.Provider value={{ refetch }}>
+        <div>
+          <SortBtns refetch={refetch} />
+          <div className="country__section" ref={parentRef} style={{ position: "relative" }}>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <CountryAddForm dispatch={switchLangDispatch} typeOfLanguage={"eng"} />
+            </div>
+            <div style={{ height: rowVirtualizer.getTotalSize(), overflowY: "auto" }}>
+              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                // Получаем правильный индекс для элемента
+                const index = virtualItem.index; 
+                //eslint-disable-next-line
+                //@ts-ignore
+                const country = data?.pages.flatMap(page => page.data)[index]; 
+                return (
+                  <Wrapper
+                    key={country.id}
+                    flagUrl={country.flagUrl}
+                    countryIndex={index}
+                    dispatch={switchLangDispatch}
+                    el={country}
+                    countryLikes={country.likes}
+                    // Использовать virtualItem.start и virtualItem.size для позиционирования
+                  />
+                );
+              })}
+              <div ref={ref}></div>
+            </div>
           </div>
-          {countriesState.countries.map((obj, index) => (
-            <Wrapper
-              key={obj.id}
-              flagUrl={obj.flagUrl}
-              countryIndex={index}
-              countriesState={countriesState.countries}
-              dispatch={switchLangDispatch}
-              el={obj}
-              onDelete={() => handleDeleteCountry(index)}
-              onRevive={() => handleReviveCountry(index)}
-            />
-          ))}
         </div>
-      </div>
-    </>
-  );
+      </countryComponentContext.Provider>
+    );
+  }
+
+  return null;
 };
 
 export default CountryComponent;

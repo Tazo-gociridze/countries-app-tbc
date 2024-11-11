@@ -7,34 +7,39 @@ import { CountryAction } from "../Reducer/countryReducer";
 import { LanguageContext } from "../../../App";
 import { deleteCountry } from "../../../api/countries";
 import { useMutation } from "@tanstack/react-query";
+import { countryComponentContext } from "./countrySection/CountryComponent";
 
 interface WrapperProps {
   flagUrl: string | unknown;
   el: CountryData;
   countryIndex: number;
-  countriesState: CountryData[];
+  countryLikes: number;
   dispatch: React.Dispatch<CountryAction>;
-  onDelete: () => void;
-  onRevive: () => void;
 }
 
 const Wrapper: React.FC<WrapperProps> = (props) => {
   const { switchLang } = useContext(LanguageContext);
-  const { flagUrl, el, countryIndex, countriesState, dispatch, onRevive } =
-    props;
+  const { refetch } = useContext(countryComponentContext);
+  const {
+    flagUrl,
+    el,
+    countryLikes,
+    countryIndex,
+    dispatch,
+  } = props;
   const id = el.id;
 
-  const deleteMutation = useMutation({mutationFn:deleteCountry});
+  const deleteMutation = useMutation({ mutationFn: deleteCountry });
 
   const handleDelete = () => {
-    deleteMutation.mutate(3, {
+    deleteMutation.mutate(id, {
       onSuccess: () => {
-        dispatch({ type: "DELETE_COUNTRY", payload: { index: countryIndex } });
+        refetch();
       },
       onError: (error) => {
         console.error("Error deleting country:", error);
       },
-    }); 
+    });
   };
 
   return (
@@ -44,10 +49,12 @@ const Wrapper: React.FC<WrapperProps> = (props) => {
       <Link to={`/en/country/${id}`}>
         <Img flagUrl={flagUrl} />
       </Link>
+      {/* eslint-disable-next-line */}
+      {/* @ts-ignore */}
       <Characteristics
+        countryLikes={countryLikes}
         el={el}
         index={countryIndex}
-        countryState={countriesState}
         dispatch={dispatch}
       />
 
@@ -55,7 +62,7 @@ const Wrapper: React.FC<WrapperProps> = (props) => {
         {switchLang === "en" ? "Delete" : "წაშლა"}
       </button>
       {el.isDeleted ? (
-        <button onClick={onRevive} className="revive-btn">
+        <button className="revive-btn">
           {switchLang === "en" ? "Revive" : "აღდგენა"}
         </button>
       ) : (

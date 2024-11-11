@@ -31,11 +31,16 @@ export const LanguageContext = createContext({
   state: undefined as unknown as CountryState,
   setCountryAdded: undefined as unknown as (value: boolean) => void,
   countryAdded: undefined as unknown as boolean,
+  setIsSortedUp: undefined as unknown as (value: boolean) => void,
+  isSortedUp: undefined as unknown as boolean,
+  refetch: () => {},
 });
 
 const App: FC = () => {
   const [switchLang, setSwitchLang] = useState("en");
   const [countryAdded, setCountryAdded] = useState(false);
+  const [isSortedUp, setIsSortedUp] = useState(false);
+
   const [state, dispatch] = useReducer(countryReducer, {
     switchLang: switchLang,
     countries: [],
@@ -43,7 +48,9 @@ const App: FC = () => {
 
   const { isLoading, error, refetch } = useQuery({
     queryKey: ["countries"],
-    queryFn: () => getCountries({ dispatch }),
+    //eslint-disable-next-line
+    //@ts-ignore
+    queryFn: () => getCountries(),
   });
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const App: FC = () => {
       setCountryAdded(!countryAdded);
       refetch();
     }
-  }, [countryAdded, refetch]);
+  }, [countryAdded, refetch, isSortedUp]);
 
   if (isLoading) return <div>loding...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -66,6 +73,9 @@ const App: FC = () => {
           state,
           setCountryAdded,
           countryAdded,
+          isSortedUp,
+          setIsSortedUp,
+          refetch,
         }}
       >
         <Routes>
@@ -75,13 +85,11 @@ const App: FC = () => {
             <Route path="/:lang/about" element={<About />}></Route>
             <Route
               path="/:lang/country"
-              element={
-                <Country countriesState={state} switchLangDispatch={dispatch} />
-              }
+              element={<Country switchLangDispatch={dispatch} />}
             ></Route>
             <Route
               path="/:lang/country/:id"
-              element={<SingleCountry countriesState={state} />}
+              element={<SingleCountry />}
             ></Route>
             <Route path="/:lang/contact" element={<Contact />}></Route>
             <Route path="/:lang/otpinput" element={<OtpInput />}></Route>

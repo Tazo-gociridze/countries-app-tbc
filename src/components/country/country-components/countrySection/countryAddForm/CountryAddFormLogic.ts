@@ -32,7 +32,6 @@ export const useCountryAddFormLogic = () => {
   const [nameError, setNameError] = useState("");
   const [capitalError, setCapitalError] = useState("");
   const [populationError, setPopulationError] = useState("");
-  
 
   const handleFlagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -63,8 +62,7 @@ export const useCountryAddFormLogic = () => {
     });
   };
 
-
-  const addCountryMutation = useMutation({mutationFn:addCountry});
+  const addCountryMutation = useMutation({ mutationFn: addCountry });
 
   const handleAddCountry = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,14 +86,17 @@ export const useCountryAddFormLogic = () => {
         };
 
         // ქვეყნის დამატება მუტაციით
-        addCountryMutation.mutate({newCountry}, {
-          onSuccess: () => {
-            console.log('country added')
+        addCountryMutation.mutate(
+          { newCountry },
+          {
+            onSuccess: () => {
+              console.log("country added");
+            },
+            onError: (error) => {
+              console.error("erroe for adding country", error);
+            },
           },
-          onError: (error) => {
-            console.error('erroe for adding country', error);
-          },
-        })
+        );
 
         setNewCountryNameEng("");
         setNewCountryCapitalEng("");

@@ -1,29 +1,16 @@
-import { CountryAction } from "@components/country/Reducer/countryReducer";
 import { httpClient } from "..";
 import { CountryData } from "@components/country/static/Interfaces";
 
-interface CountryResponse {
-  data: CountryData;
-}
-
 //აღწერეთ ტაიპსკრიპტის მეშვეობით რექუესთზე დაბრუნებული პასუხი
-export const getCountries = async ({
-  dispatch,
-}: {
-  dispatch: React.Dispatch<CountryAction>;
-}) => {
+export const getCountries = async (searchParams: URLSearchParams, pageParam: number) => {
   try {
-    const res: CountryResponse = await httpClient.get("/countries");
-    dispatch({
-      type: "FETCH_COUNTRIES_SUCCESS",
-      payload: { resData: res.data },
-    });
+    const res = await httpClient.get<CountryData>(`/countries?_page=${pageParam}&_per_page=5&_${searchParams}`);
+    console.log(`${searchParams}`)
     return res.data;
   } catch (error) {
     console.error("error for reciving countries", error);
   }
 };
-
 
 export const addCountry = async ({
   newCountry,
@@ -45,11 +32,30 @@ export const deleteCountry = async (id: number | string | bigint) => {
   }
 };
 
-
 export const editingCountry = async (updatedCountry: CountryData) => {
   try {
-    await httpClient.put(`/countries/${updatedCountry.id}`, updatedCountry); 
+    await httpClient.put(`/countries/${updatedCountry.id}`, updatedCountry);
   } catch (error) {
     console.error("Error editing country:", error);
   }
 };
+
+export const updateLikes = async ({ el, countryLikes }: { el: CountryData, countryLikes: number }) => {
+  try {
+    httpClient.patch(`/countries/${el.id}`, {likes: countryLikes + 1})
+  } catch (error) {
+    console.error("Error editing country:", error);
+  }
+};
+
+export const countryDetailPage = async ({ id }: { id: string | number }) => {
+  try {
+    return await httpClient.get(`/countries/${id}`);
+  } catch {
+    console.log("catch");
+  }
+};
+
+export const sortCounrties = async ({searchParams}: {searchParams: string}) => {
+  httpClient.get(`/countries?_${searchParams}`).then((sortedData) => {console.log(sortedData)});
+}
