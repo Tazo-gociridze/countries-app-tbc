@@ -9,7 +9,7 @@ export default defineConfig(() => {
   return {
     plugins: [react()],
     build: {
-      outDir: 'dist',
+      outDir: "dist",
     },
     resolve: {
       // alias: {
