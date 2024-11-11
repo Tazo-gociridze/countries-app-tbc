@@ -2,10 +2,15 @@ import { httpClient } from "..";
 import { CountryData } from "@components/country/static/Interfaces";
 
 //აღწერეთ ტაიპსკრიპტის მეშვეობით რექუესთზე დაბრუნებული პასუხი
-export const getCountries = async (searchParams: URLSearchParams, pageParam: number) => {
+export const getCountries = async (
+  searchParams: URLSearchParams,
+  pageParam: number,
+) => {
   try {
-    const res = await httpClient.get<CountryData>(`/countries?_page=${pageParam}&_per_page=5&_${searchParams}`);
-    console.log(`${searchParams}`)
+    const res = await httpClient.get<CountryData>(
+      `/countries?_page=${pageParam}&_per_page=5&_${searchParams}`,
+    );
+    console.log(`${searchParams}`);
     return res.data;
   } catch (error) {
     console.error("error for reciving countries", error);
@@ -40,9 +45,15 @@ export const editingCountry = async (updatedCountry: CountryData) => {
   }
 };
 
-export const updateLikes = async ({ el, countryLikes }: { el: CountryData, countryLikes: number }) => {
+export const updateLikes = async ({
+  el,
+  countryLikes,
+}: {
+  el: CountryData;
+  countryLikes: number;
+}) => {
   try {
-    httpClient.patch(`/countries/${el.id}`, {likes: countryLikes + 1})
+    httpClient.patch(`/countries/${el.id}`, { likes: countryLikes + 1 });
   } catch (error) {
     console.error("Error editing country:", error);
   }
@@ -56,6 +67,12 @@ export const countryDetailPage = async ({ id }: { id: string | number }) => {
   }
 };
 
-export const sortCounrties = async ({searchParams}: {searchParams: string}) => {
-  httpClient.get(`/countries?_${searchParams}`).then((sortedData) => {console.log(sortedData)});
-}
+export const sortCounrties = async ({
+  searchParams,
+}: {
+  searchParams: string;
+}) => {
+  httpClient.get(`/countries?_${searchParams}`).then((sortedData) => {
+    console.log(sortedData);
+  });
+};

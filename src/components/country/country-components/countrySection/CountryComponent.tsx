@@ -15,8 +15,8 @@ export interface countryStateType {
 }
 
 export const countryComponentContext = createContext({
-    refetch: () => {},
-})
+  refetch: () => {},
+});
 
 const CountryComponent: React.FC<countryStateType> = ({
   switchLangDispatch,
@@ -25,25 +25,20 @@ const CountryComponent: React.FC<countryStateType> = ({
   //eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
 
-  httpClient.get('/countries?_page=1&_per_page=5&_next').then((next) => console.log(next.data))
+  httpClient
+    .get("/countries?_page=1&_per_page=5&_next")
+    .then((next) => console.log(next.data));
 
-  const {
-    isLoading,
-    error,
-    data,
-    refetch,
-    fetchNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['countries-fetch', searchParams],
+  const { isLoading, error, data, refetch, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["countries-fetch", searchParams],
     queryFn: ({ pageParam }) => getCountries(searchParams, pageParam),
     initialPageParam: 1,
     //eslint-disable-next-line
     //@ts-ignore
-    getNextPageParam: (lastPage) => lastPage.next
+    getNextPageParam: (lastPage) => lastPage.next,
   });
 
-  const {ref, inView} = useInView()
-
+  const { ref, inView } = useInView();
 
   const rowVirtualizer = useVirtualizer({
     //eslint-disable-next-line
@@ -54,12 +49,12 @@ const CountryComponent: React.FC<countryStateType> = ({
   });
 
   useEffect(() => {
-     if(inView){
-      fetchNextPage()
-      console.log('asd')
-     }
+    if (inView) {
+      fetchNextPage();
+      setSearchParams();
+    }
   }, [fetchNextPage, inView]);
-  
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -75,17 +70,29 @@ const CountryComponent: React.FC<countryStateType> = ({
       <countryComponentContext.Provider value={{ refetch }}>
         <div>
           <SortBtns refetch={refetch} />
-          <div className="country__section" ref={parentRef} style={{ position: "relative" }}>
+          <div
+            className="country__section"
+            ref={parentRef}
+            style={{ position: "relative" }}
+          >
             <div style={{ display: "flex", gap: "10px" }}>
-              <CountryAddForm dispatch={switchLangDispatch} typeOfLanguage={"eng"} />
+              <CountryAddForm
+                dispatch={switchLangDispatch}
+                typeOfLanguage={"eng"}
+              />
             </div>
-            <div style={{ height: rowVirtualizer.getTotalSize(), overflowY: "auto" }}>
+            <div
+              style={{
+                height: rowVirtualizer.getTotalSize(),
+                overflowY: "auto",
+              }}
+            >
               {rowVirtualizer.getVirtualItems().map((virtualItem) => {
                 // Получаем правильный индекс для элемента
-                const index = virtualItem.index; 
+                const index = virtualItem.index;
                 //eslint-disable-next-line
                 //@ts-ignore
-                const country = data?.pages.flatMap(page => page.data)[index]; 
+                const country = data?.pages.flatMap((page) => page.data)[index];
                 return (
                   <Wrapper
                     key={country.id}

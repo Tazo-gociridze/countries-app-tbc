@@ -20,13 +20,7 @@ interface WrapperProps {
 const Wrapper: React.FC<WrapperProps> = (props) => {
   const { switchLang } = useContext(LanguageContext);
   const { refetch } = useContext(countryComponentContext);
-  const {
-    flagUrl,
-    el,
-    countryLikes,
-    countryIndex,
-    dispatch,
-  } = props;
+  const { flagUrl, el, countryLikes, countryIndex, dispatch } = props;
   const id = el.id;
 
   const deleteMutation = useMutation({ mutationFn: deleteCountry });

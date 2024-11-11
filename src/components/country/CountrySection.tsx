@@ -3,15 +3,11 @@ import CountryComponent, {
   countryStateType,
 } from "./country-components/countrySection/CountryComponent";
 
-const CountrySection: FC<countryStateType> = ({
-  switchLangDispatch,
-}) => {
+const CountrySection: FC<countryStateType> = ({ switchLangDispatch }) => {
   return (
     <>
       <section>
-        <CountryComponent
-          switchLangDispatch={switchLangDispatch}
-        />
+        <CountryComponent switchLangDispatch={switchLangDispatch} />
       </section>
     </>
   );

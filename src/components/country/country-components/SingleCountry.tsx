@@ -10,10 +10,9 @@ const SingleCountry = () => {
     population: "",
   });
 
-
   useEffect(() => {
     if (id) {
-      countryDetailPage({ id }).then((res) => setSpecificCountry(res?.data))
+      countryDetailPage({ id }).then((res) => setSpecificCountry(res?.data));
     }
     //eslint-disable-next-line
   }, []);

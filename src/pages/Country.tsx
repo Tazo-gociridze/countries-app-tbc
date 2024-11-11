@@ -3,15 +3,11 @@ import "../App.css";
 import { FC } from "react";
 import { countryStateType } from "@components/country/country-components/countrySection/CountryComponent";
 
-const Country: FC<countryStateType> = ({
-  switchLangDispatch,
-}) => {
+const Country: FC<countryStateType> = ({ switchLangDispatch }) => {
   return (
     <>
       <main>
-        <CountrySection
-          switchLangDispatch={switchLangDispatch}
-        />
+        <CountrySection switchLangDispatch={switchLangDispatch} />
       </main>
     </>
   );

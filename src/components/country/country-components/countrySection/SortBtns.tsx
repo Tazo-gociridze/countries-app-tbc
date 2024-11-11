@@ -7,20 +7,24 @@ interface SortBtnsProps {
   refetch: () => void;
 }
 
-const SortBtns: React.FC<SortBtnsProps> = ({refetch}) => {
-  const { switchLang, } = useContext(LanguageContext);
+const SortBtns: React.FC<SortBtnsProps> = ({ refetch }) => {
+  const { switchLang } = useContext(LanguageContext);
   //eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSortUp = () => {
     setSearchParams({ sort: "-likes" });
-    refetch()
+    refetch();
   };
 
   const handleSortDown = () => {
     setSearchParams({ sort: "likes" });
-    refetch()
+    refetch();
   };
+
+  if (searchParams) {
+    console.log(searchParams);
+  }
 
   return (
     <div>

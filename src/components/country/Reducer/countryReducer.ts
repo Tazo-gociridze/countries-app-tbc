@@ -5,7 +5,6 @@ export interface ChangeLanguagePayload {
 }
 
 export interface CountryState {
-
   switchLang: string;
   countries: CountryData[];
 }

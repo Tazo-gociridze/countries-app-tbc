@@ -16,12 +16,12 @@ export interface CountryInfoProps {
 
 const useCharacteristicsLogic = ({
   el,
-  countryLikes
+  countryLikes,
 }: {
-  el: CountryData,
-  countryLikes: number
+  el: CountryData;
+  countryLikes: number;
 }) => {
-  const { countryAdded, setCountryAdded} = useContext(LanguageContext);
+  const { countryAdded, setCountryAdded } = useContext(LanguageContext);
   const { refetch } = useContext(countryComponentContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(el.name);
@@ -29,18 +29,26 @@ const useCharacteristicsLogic = ({
   const [editedPopulation, setEditedPopulation] = useState(el.population);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const likesMutation = useMutation({ mutationFn: updateLikes});
+  const likesMutation = useMutation({ mutationFn: updateLikes });
 
-  const handleLikeClick = ({ el }: { el: CountryData, countryLikes: number }) => {
-    likesMutation.mutate({ el, countryLikes }, {
-      onSuccess: () => {
-        console.log('isSuccsess')
-        refetch()
+  const handleLikeClick = ({
+    el,
+  }: {
+    el: CountryData;
+    countryLikes: number;
+  }) => {
+    likesMutation.mutate(
+      { el, countryLikes },
+      {
+        onSuccess: () => {
+          console.log("isSuccsess");
+          refetch();
+        },
+        onError: () => {
+          console.log("error for increment likes");
+        },
       },
-      onError: () => {
-        console.log('error for increment likes')
-      }
-    }); 
+    );
   };
 
   const handleEditClick = () => {

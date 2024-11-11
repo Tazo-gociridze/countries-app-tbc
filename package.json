@@ -10,7 +10,7 @@
     "type": "tsc -b",
     "format": "prettier . --write",
     "preview": "vite preview",
-    "prepare": "husky",
+    "prepare": "husky install",
     "json-server": "npx json-server --watch db.json",
     "seed-db": "node seed-db.cjs"
   },
@@ -22,6 +22,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "express-fileupload": "^1.5.1",
+    "husky": "^9.1.6",
     "json-server": "^1.0.0-beta.3",
     "node-fetch": "^3.3.2",
     "react": "^18.3.1",
