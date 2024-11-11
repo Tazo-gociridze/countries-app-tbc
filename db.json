@@ -1,14 +1,6 @@
 {
   "countries": [
     {
-      "id": "ZA",
-      "name": "South Africa",
-      "capital": "Pretoria",
-      "population": "59308690фывфы",
-      "likes": 59,
-      "flagUrl": "https://flagcdn.com/w320/za.png"
-    },
-    {
       "id": "MX",
       "name": "Mexico",
       "capital": "Mexico City",

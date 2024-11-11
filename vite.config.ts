@@ -8,6 +8,9 @@ export default defineConfig(() => {
 
   return {
     plugins: [react()],
+    build: {
+      outDir: 'dist',
+    },
     resolve: {
       // alias: {
       //   '@' : rootPath,
