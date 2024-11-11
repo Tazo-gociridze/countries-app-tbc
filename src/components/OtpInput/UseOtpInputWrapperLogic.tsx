@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-
+ 
 const useOtpInputWrapperLogic = ({
   inputsQuantity,
 }: {

@@ -14,6 +14,7 @@ export interface countryStateType {
   switchLangDispatch: Dispatch<CountryAction>;
 }
 
+//eslint-disable-next-line
 export const countryComponentContext = createContext({
   refetch: () => {},
 });
@@ -53,6 +54,7 @@ const CountryComponent: React.FC<countryStateType> = ({
       fetchNextPage();
       setSearchParams();
     }
+    //eslint-disable-next-line
   }, [fetchNextPage, inView]);
 
   if (isLoading) {

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import useOtpInputWrapperLogic from "./useOtpInputWrapperLogic";
+import useOtpInputWrapperLogic from "./useOtpInputWrapperLogic"; 
 
 const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({
   inputsQuantity,
@@ -10,7 +10,7 @@ const OtpInputWrapper: FC<{ inputsQuantity: number }> = ({
 
   return (
     <div className="otpinput-wrapper">
-      {otpValues.map((value, index) => (
+      {otpValues.map((value: string, index: number) => ( 
         <input
           autoFocus={index === 0}
           className="otp-input"
