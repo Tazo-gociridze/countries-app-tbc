@@ -25,10 +25,11 @@ const CountryComponent: React.FC<countryStateType> = ({
   const parentRef = useRef<HTMLDivElement>(null);
   //eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
+  const { ref, inView } = useInView();
 
-  httpClient
-    .get("/countries?_page=1&_per_page=5&_next")
-    .then((next) => console.log(next.data));
+ useEffect(() => {
+  httpClient.get("/countries?_page=1&_per_page=5&_next")
+ }, [ref, inView])
 
   const { isLoading, error, data, refetch, fetchNextPage } = useInfiniteQuery({
     queryKey: ["countries-fetch", searchParams],
@@ -39,14 +40,13 @@ const CountryComponent: React.FC<countryStateType> = ({
     getNextPageParam: (lastPage) => lastPage.next,
   });
 
-  const { ref, inView } = useInView();
-
   const rowVirtualizer = useVirtualizer({
     //eslint-disable-next-line
     //@ts-ignore
     count: data?.pages?.reduce((acc, page) => acc + page.data.length, 0) || 0,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 195,
+    estimateSize: () => 795,
+    overscan: 3,
   });
 
   useEffect(() => {
@@ -65,37 +65,46 @@ const CountryComponent: React.FC<countryStateType> = ({
     return <div>Error: {error.message}</div>;
   }
 
-  //eslint-disable-next-line
-  //@ts-ignore
-  if (data?.pages[0].data) {
-    return (
-      <countryComponentContext.Provider value={{ refetch }}>
-        <div>
-          <SortBtns refetch={refetch} />
+  return (
+    <countryComponentContext.Provider value={{ refetch }}>
+      <div className="country__section">
+        <SortBtns refetch={refetch} />
+        <div style={{ display: "flex", gap: "10px" }}>
+          <CountryAddForm
+            dispatch={switchLangDispatch}
+            typeOfLanguage={"eng"}
+          />
+        </div>
+        <div
+          ref={parentRef}
+          style={{
+            height: '800px',
+            overflowY: "auto",
+          }}
+        >
           <div
-            className="country__section"
-            ref={parentRef}
-            style={{ position: "relative" }}
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: "100%",
+              position: "relative",
+              display: 'flex',
+              justifyContent: 'center'
+            }}
           >
-            <div style={{ display: "flex", gap: "10px" }}>
-              <CountryAddForm
-                dispatch={switchLangDispatch}
-                typeOfLanguage={"eng"}
-              />
-            </div>
-            <div
-              style={{
-                height: rowVirtualizer.getTotalSize(),
-                overflowY: "auto",
-              }}
-            >
-              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                // Получаем правильный индекс для элемента
-                const index = virtualItem.index;
-                //eslint-disable-next-line
-                //@ts-ignore
-                const country = data?.pages.flatMap((page) => page.data)[index];
-                return (
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+              const index = virtualItem.index;
+              //eslint-disable-next-line
+              //@ts-ignore
+              const country = data?.pages.flatMap((page) => page.data)[index];
+              return (
+                <div
+                  key={virtualItem.key}
+                  style={{
+                    position: "absolute",
+                    top: virtualItem.start,
+                    height: virtualItem.size,
+                  }}
+                >
                   <Wrapper
                     key={country.id}
                     flagUrl={country.flagUrl}
@@ -103,19 +112,16 @@ const CountryComponent: React.FC<countryStateType> = ({
                     dispatch={switchLangDispatch}
                     el={country}
                     countryLikes={country.likes}
-                    // Использовать virtualItem.start и virtualItem.size для позиционирования
                   />
-                );
-              })}
-              <div ref={ref}></div>
-            </div>
+                </div>
+              );
+            })}
+            <div style={{marginTop:`${rowVirtualizer.getTotalSize()}px`}} ref={ref}></div>
           </div>
         </div>
-      </countryComponentContext.Provider>
-    );
-  }
-
-  return null;
+      </div>
+    </countryComponentContext.Provider>
+  );
 };
 
 export default CountryComponent;

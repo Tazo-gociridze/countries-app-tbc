@@ -23,7 +23,7 @@ const SortBtns: React.FC<SortBtnsProps> = ({ refetch }) => {
   };
 
   if (searchParams) {
-    console.log(searchParams);
+    <></>
   }
 
   return (

@@ -10,7 +10,6 @@ export const getCountries = async (
     const res = await httpClient.get<CountryData>(
       `/countries?_page=${pageParam}&_per_page=5&_${searchParams}`,
     );
-    console.log(`${searchParams}`);
     return res.data;
   } catch (error) {
     console.error("error for reciving countries", error);
@@ -59,7 +58,7 @@ export const updateLikes = async ({
   }
 };
 
-export const countryDetailPage = async ({ id }: { id: string | number }) => {
+export const countryDetailPage = async ({ id }: { id: string | number | undefined}) => {
   try {
     return await httpClient.get(`/countries/${id}`);
   } catch {
